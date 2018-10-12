@@ -1,0 +1,40 @@
+{
+        "QM_engine":"GAUSSIAN",
+        "nproc":"10",
+        "mem":"2000mw",
+        "method":"B3LYP em=gd3",
+        "basis":"6-31G* int=fine",
+        "extra":"",
+        "charge":-1,
+        "multi":1,
+        "call_gaussian":"g16",
+
+        "initfile":"ts.fchk",
+        "temperature":300,
+        "transition":true,
+        "traj_filename":"traj.xyz",
+        "dt":0.5,
+        "tmax":100,
+        "maxe":5,
+        "states":{
+            "state-A":[
+        {
+            "type":"B",
+            "ia":1,
+            "ib":5,
+            "min":0.0,
+            "max":2.2
+        }
+    ],
+    "state-B":[
+        {
+            "type":"B",
+            "ia":1,
+            "ib":6,
+            "min":0.0,
+            "max":2.2
+        }
+    ]
+        },
+        "writevel":true
+}
