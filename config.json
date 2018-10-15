@@ -11,10 +11,10 @@
 
         "initfile":"ts.fchk",
         "temperature":300,
-        "transition":true,
+        "direction":"both",
         "traj_filename":"traj.xyz",
         "dt":0.5,
-        "tmax":100,
+        "tmax":200,
         "maxe":5,
         "states":{
             "state-A":[
@@ -36,5 +36,5 @@
         }
     ]
         },
-        "writevel":true
+        "writevel":false
 }

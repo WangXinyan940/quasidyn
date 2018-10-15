@@ -151,12 +151,8 @@ def vv_step(xyz, vel, grad, calcGrad, mass, dt):
 def getBoltzmann(temperature=300): #return J
     return - 0.5 * KB * temperature * np.log(np.random.random()) 
 
-def initByVib(xyz, mass, force_consts, vibs, temperature=300):
-    ei = np.matrix(xyz.reshape((xyz.shape[0] * xyz.shape[1], 1)))
-    ev = vibs * ei
-    rv = np.random.random(ev.shape) * 0.01 - 0.005
-    nei = vibs.I * (ev + rv)
-    nxyz = nei.reshape(xyz.shape)
+def initByVib(xyz, mass, force_consts, vibs, temperature=300, virtsign=0):
+    nxyz = xyz + (np.random.random(xyz.shape) - 0.5) * 2 * 0.02 * ANGSTROM
     freq = np.sign(force_consts) * np.sqrt(np.abs(force_consts)) / 2. / np.pi
     #return velf, velr
     mv = np.zeros((len(mass) * 3,))
@@ -168,8 +164,12 @@ def initByVib(xyz, mass, force_consts, vibs, temperature=300):
         if f < 0:
             energy = getBoltzmann(temperature=temperature)
             alpha = np.sqrt(2 * energy / (mv * np.power(vibs[:,n], 2)).sum())
-            velf = velf + (alpha * vibs[:,n]).reshape(xyz.shape)
-            velr = velr - (alpha * vibs[:,n]).reshape(xyz.shape)
+            if virtsign == 0:
+                velf = velf + (alpha * vibs[:,n]).reshape(xyz.shape)
+                velr = velr - (alpha * vibs[:,n]).reshape(xyz.shape)
+            else:
+                velf = velf + virtsign * (alpha * vibs[:,n]).reshape(xyz.shape)
+                velr = velr + virtsign * (alpha * vibs[:,n]).reshape(xyz.shape)
             #v = alpha * vibs[:,n]
             #print(f/2.9979e10,(mv * np.power(v,2)).sum() / KB)
         else:
@@ -242,9 +242,14 @@ if __name__ == '__main__':
     atoms, xyz, mass = readBasic(config["initfile"])
     calcGrad = genGrad(atoms)
     force_consts, vibs = readVib(config["initfile"])
-    xyz, vel, velr = initByVib(xyz, mass, force_consts, vibs, temperature=config["temperature"])
+    if config["direction"] == "forward":
+        xyz, vel, velr = initByVib(xyz, mass, force_consts, vibs, temperature=config["temperature"], virtsign=1)
+    elif config["direction"] == "reverse":
+        xyz, vel, velr = initByVib(xyz, mass, force_consts, vibs, temperature=config["temperature"], virtsign=-1)
+    elif config["direction"] == "both":
+        xyz, vel, velr = initByVib(xyz, mass, force_consts, vibs, temperature=config["temperature"], virtsign=0)
     energy, grad = calcGrad(xyz)
-    if config["transition"]:
+    if config["direction"] == "both":
         init_xyz = np.zeros(xyz.shape)
         init_vel = np.zeros(vel.shape)
         init_grad = np.zeros(grad.shape)
@@ -267,7 +272,7 @@ if __name__ == '__main__':
         if np.abs(energy_list[-1] - energy) * 627.5 > config["maxe"]:
             print("ELECTRON ENERGY CHANGE TOO MUCH!!!")
             break
-    if not config["transition"]:
+    if not config["direction"] == "both":
         exit()
     step = 0
     energy_list = []
