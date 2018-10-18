@@ -13,10 +13,15 @@ ATOM_TO_MASS = {1:1.008, "H":1.008,
                 6:12.011, "C":12.011,
                 7:14.007, "N":14.007,
                 8:15.999, "O":15.999,
+                16:32.066, "S":32.066,
                 17:35.453, "Cl":35.453,
                 35:79.904, "Br":79.904,}
 #read config
-with open("config.json", "r") as f:
+if len(sys.argv) > 1:
+    config_name = sys.argv[1]
+else:
+    config_name = "config.json"
+with open(config_name, "r") as f:
     config = json.load(f)
 
 def findline(word, text):
