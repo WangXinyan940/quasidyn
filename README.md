@@ -14,7 +14,9 @@ This program is for quasi-classical direct dynamics. The conformation is chosen 
 
 If not setting the name of configure file, "config.json" will be used by default.
 
-## Config file example:
+## Configure file example:
+
+The configure file is regular json file and do not support note. So the # sentences should be removed while using.
 
     {
             "QM_engine":"GAUSSIAN", #Only Gaussian is supported at present.
