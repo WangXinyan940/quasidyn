@@ -22,7 +22,7 @@ If not setting the name of configure file, "config.json" will be used by default
             "mem":"2000mw", #Memory used.
             "method":"B3LYP em=gd3", #Computational method.
             "basis":"6-31G* int=fine", #Basis set.
-            "extra":"", #Extra command needed, such as "scf" setting.
+            "extra":"", #Extra setting needed, such as "scf" setting.
             "charge":-1, #System charge.
             "multi":1, #Spin multiplicity.
             "call_gaussian":"g16", #The command needed to call Gaussian.
